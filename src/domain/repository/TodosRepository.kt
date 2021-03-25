@@ -25,20 +25,18 @@ class TodosRepository() {
     }
   }
 
-  fun createTodo(todo: Todo) {
+  fun createTodo(todo: Todo): Int {
     return transaction {
-      Todos.insert {
+      Todos.insertAndGetId {
         it[content] = todo.content
         it[completed] = todo.completed
-      }
+      }.value
     }
   }
 
-  fun deleteTodo(todoId: Int) {
+  fun deleteTodo(todoId: Int): Int {
     return transaction {
       Todos.deleteWhere { Todos.id eq todoId }
-        .takeIf { it == 0 }
-        ?.apply { throw Error("Not Found") }
     }
   }
 
@@ -47,6 +45,12 @@ class TodosRepository() {
       Todos.select { Todos.id eq todoId }
         .map { Todos.toDomain(it) }
         .firstOrNull()
+    }
+  }
+
+  fun DeleteAll() {
+    return transaction {
+      Todos.deleteAll()
     }
   }
 }

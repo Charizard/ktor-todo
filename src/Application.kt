@@ -13,6 +13,7 @@ import com.todos.domain.repository.TodosRepository
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import javax.sql.DataSource
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -29,7 +30,11 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
-    val dataSource = DBConfig("jdbc:postgresql://localhost/todos", "charizard", "").getDataSource()
+    val dataSource: DataSource = if (testing) {
+        DBConfig("jdbc:postgresql://localhost/todos_test", "charizard", "").getDataSource()
+    } else {
+        DBConfig("jdbc:postgresql://localhost/todos", "charizard", "").getDataSource()
+    }
     Database.connect(dataSource)
 
 
