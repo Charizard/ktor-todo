@@ -28,4 +28,12 @@ class UsersRepository() {
         .count()
     }
   }
+
+  fun findUserFromEmail(email: String): User? {
+    return transaction {
+      Users.select { Users.email eq email }
+        .map { Users.toDomain(it) }
+        .firstOrNull()
+    }
+  }
 }

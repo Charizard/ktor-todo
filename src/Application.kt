@@ -13,6 +13,7 @@ import io.ktor.jackson.*
 import com.todos.domain.model.User
 import com.todos.domain.repository.Users
 import com.todos.domain.service.TodoService
+import com.todos.domain.service.UsersService
 import com.todos.routes.usersRoute
 import io.ktor.auth.*
 import io.ktor.auth.jwt.*
@@ -43,15 +44,15 @@ fun Application.module(testing: Boolean = false) {
 
     install(Authentication) {
         val jwtConfig: JwtConfig by inject()
+        val usersService: UsersService by inject()
 
         jwt {
             realm = "com.todos"
             verifier(jwtConfig.makeJwtVerifier())
             validate {
-                val id = it.payload.getClaim("id").asInt()
                 val email = it.payload.getClaim("email").asString()
 
-                User(1, "sample", "sdkjhf", "sample@exampler.com");
+                usersService.findUserFromEmail(email)
             }
         }
     }
