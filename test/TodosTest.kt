@@ -1,20 +1,13 @@
 package com.todos
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.features.*
-import org.slf4j.event.*
-import io.ktor.routing.*
 import io.ktor.http.*
 import com.fasterxml.jackson.databind.*
 import com.todos.domain.model.Todo
 import com.todos.domain.repository.TodosRepository
-import io.ktor.jackson.*
 import kotlin.test.*
 import io.ktor.server.testing.*
 
-class ApplicationTest {
+class TodosTest {
     private val todosRepository = TodosRepository()
 
     @Test

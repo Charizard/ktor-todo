@@ -36,4 +36,20 @@ class UsersRepository() {
         .firstOrNull()
     }
   }
+
+  fun createUser(user: User): Int {
+    return transaction {
+      Users.insertAndGetId {
+        it[name] = user.name
+        it[email] = user.email
+        it[password] = user.password
+      }.value
+    }
+  }
+
+  fun deleteAll() {
+    return transaction {
+      Users.deleteAll()
+    }
+  }
 }

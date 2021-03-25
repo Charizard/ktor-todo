@@ -21,5 +21,10 @@ val usersModule = module {
 }
 
 val configModule = module {
-  single { JwtConfig(getProperty("jwt.domain", "https://todos.com/"), getProperty("jwt.audience", "jwt-audience")) }
+  single {
+    JwtConfig(
+      getProperty("jwt.domain", "https://todos.com/"),
+      getProperty("jwt.audience", "jwt-audience")
+    )
+  }
 }

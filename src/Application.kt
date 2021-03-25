@@ -10,16 +10,13 @@ import io.ktor.routing.*
 import com.todos.domain.repository.Todos
 import com.todos.routes.todosRoute
 import io.ktor.jackson.*
-import com.todos.domain.model.User
 import com.todos.domain.repository.Users
-import com.todos.domain.service.TodoService
 import com.todos.domain.service.UsersService
 import com.todos.routes.usersRoute
 import io.ktor.auth.*
 import io.ktor.auth.jwt.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
 import org.koin.ktor.ext.Koin
