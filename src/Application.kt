@@ -1,5 +1,7 @@
 package com.todos
 
+import com.todos.config.*
+import com.todos.config.configModule
 import io.ktor.application.*
 import io.ktor.request.*
 import io.ktor.features.*
@@ -8,11 +10,15 @@ import io.ktor.routing.*
 import com.todos.domain.repository.Todos
 import com.todos.routes.todosRoute
 import io.ktor.jackson.*
-import com.todos.config.DBConfig
-import com.todos.config.todosModule
+import com.todos.domain.model.User
+import com.todos.domain.repository.Users
 import com.todos.domain.service.TodoService
+import com.todos.routes.usersRoute
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
 import org.koin.ktor.ext.Koin
@@ -31,9 +37,24 @@ fun Application.module(testing: Boolean = false) {
 
     install(Koin) {
         slf4jLogger()
-        modules(todosModule)
+        modules(todosModule, usersModule, configModule)
     }
 
+
+    install(Authentication) {
+        val jwtConfig: JwtConfig by inject()
+
+        jwt {
+            realm = "com.todos"
+            verifier(jwtConfig.makeJwtVerifier())
+            validate {
+                val id = it.payload.getClaim("id").asInt()
+                val email = it.payload.getClaim("email").asString()
+
+                User(1, "sample", "sdkjhf", "sample@exampler.com");
+            }
+        }
+    }
 
     install(ContentNegotiation) {
         jackson {
@@ -50,12 +71,12 @@ fun Application.module(testing: Boolean = false) {
 
     transaction {
         SchemaUtils.create(Todos)
+        SchemaUtils.create(Users)
     }
-
-    val todosService: TodoService by inject()
 
     routing {
         todosRoute()
+        usersRoute()
     }
 }
 
