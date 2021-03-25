@@ -9,11 +9,15 @@ import com.todos.domain.repository.Todos
 import com.todos.routes.todosRoute
 import io.ktor.jackson.*
 import com.todos.config.DBConfig
-import com.todos.domain.repository.TodosRepository
+import com.todos.config.todosModule
+import com.todos.domain.service.TodoService
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
+import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.inject
+import org.koin.logger.slf4jLogger
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -24,6 +28,12 @@ fun Application.module(testing: Boolean = false) {
         level = Level.INFO
         filter { call -> call.request.path().startsWith("/") }
     }
+
+    install(Koin) {
+        slf4jLogger()
+        modules(todosModule)
+    }
+
 
     install(ContentNegotiation) {
         jackson {
@@ -42,8 +52,10 @@ fun Application.module(testing: Boolean = false) {
         SchemaUtils.create(Todos)
     }
 
+    val todosService: TodoService by inject()
+
     routing {
-        todosRoute(TodosRepository())
+        todosRoute()
     }
 }
 

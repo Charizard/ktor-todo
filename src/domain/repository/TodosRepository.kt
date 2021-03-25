@@ -19,7 +19,7 @@ object Todos : IntIdTable() {
 }
 
 class TodosRepository() {
-  fun findAll(limit: Int = 10): List<Todo> {
+  fun findAll(limit: Int = 20): List<Todo> {
     return transaction {
       Todos.selectAll().limit(limit).map { Todos.toDomain(it) }
     }
