@@ -1,9 +1,10 @@
-package com.todos
+package integration
 
 import io.ktor.http.*
 import com.fasterxml.jackson.databind.*
 import com.todos.domain.model.Todo
 import com.todos.domain.repository.TodosRepository
+import com.todos.module
 import kotlin.test.*
 import io.ktor.server.testing.*
 
@@ -13,7 +14,7 @@ class TodosTest {
     @Test
     fun testGetTodos() {
         withTestApplication({ module(testing = true) }) {
-            todosRepository.DeleteAll()
+            todosRepository.deleteAll()
 
             handleRequest(HttpMethod.Get, "/todos").apply {
                 assertEquals(HttpStatusCode.OK, response.status())
@@ -31,7 +32,7 @@ class TodosTest {
     @Test
     fun testGetTodo() {
         withTestApplication({ module(testing = true) }) {
-            todosRepository.DeleteAll()
+            todosRepository.deleteAll()
 
             handleRequest(HttpMethod.Get, "/todos/1").apply {
                 assertEquals(HttpStatusCode.NotFound, response.status())
@@ -49,7 +50,7 @@ class TodosTest {
     @Test
     fun testPostTodo() {
         withTestApplication({ module(testing = true) }) {
-            todosRepository.DeleteAll()
+            todosRepository.deleteAll()
 
             handleRequest(HttpMethod.Post, "/todos") {
                 addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -70,7 +71,7 @@ class TodosTest {
     @Test
     fun testDeleteTodo() {
         withTestApplication({ module(testing = true) }) {
-            todosRepository.DeleteAll()
+            todosRepository.deleteAll()
 
             handleRequest(HttpMethod.Delete, "/todos/1").apply {
                 assertEquals(HttpStatusCode.NotFound, response.status())

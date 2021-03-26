@@ -1,10 +1,11 @@
-package com.todos
+package integration
 
 import com.todos.config.JwtConfig
 import io.ktor.http.*
 import com.todos.domain.model.User
 import com.todos.domain.model.UserCredentials
 import com.todos.domain.repository.UsersRepository
+import com.todos.module
 import kotlin.test.*
 import io.ktor.server.testing.*
 

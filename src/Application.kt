@@ -15,19 +15,20 @@ import com.todos.domain.service.UsersService
 import com.todos.routes.usersRoute
 import io.ktor.auth.*
 import io.ktor.auth.jwt.*
-import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import javax.sql.DataSource
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
 import org.koin.logger.slf4jLogger
+import java.lang.System.getenv
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
+    val environment: String = if (testing) { "test" } else { "development" }
+
     install(CallLogging) {
         level = Level.INFO
         filter { call -> call.request.path().startsWith("/") }
@@ -59,13 +60,7 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
-    val dataSource: DataSource = if (testing) {
-        DBConfig("jdbc:postgresql://localhost/todos_test", "charizard", "").getDataSource()
-    } else {
-        DBConfig("jdbc:postgresql://localhost/todos", "charizard", "").getDataSource()
-    }
-    Database.connect(dataSource)
-
+    DBConfig(environment)
 
     transaction {
         SchemaUtils.create(Todos)

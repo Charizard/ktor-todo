@@ -48,7 +48,7 @@ class TodosRepository() {
     }
   }
 
-  fun DeleteAll() {
+  fun deleteAll() {
     return transaction {
       Todos.deleteAll()
     }
